@@ -102,22 +102,7 @@ def check_solution(grid, n_rows, n_cols):
 	return True
 
 
-def find_empty(grid):
-	'''
-	This function returns the index (i, j) to the first zero element in a sudoku grid
-	If no such element is found, it returns None
-
-	args: grid
-	return: A tuple (i,j) where i and j are both integers, or None
-	'''
-
-	for i in range(len(grid)):
-		row = grid[i]
-		for j in range(len(row)):
-			if grid[i][j] == 0:
-				return (i, j)
-
-	return None
+from operations import find_empty
 
 
 def recursive_solve(grid, n_rows, n_cols):
