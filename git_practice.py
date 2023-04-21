@@ -3,6 +3,7 @@
 import random
 import copy
 import time
+import argparse
 
 #Grids 1-4 are 2x2
 grid1 = [
@@ -49,6 +50,22 @@ grids = [(grid1, 2, 2), (grid2, 2, 2), (grid3, 2, 2), (grid4, 2, 2), (grid5, 2, 
 DO NOT CHANGE CODE ABOVE THIS LINE
 ===================================
 '''
+parser = argparse.ArgumentParser()
+
+parser.add_argument("-explain","--explanation",help="Explain solving",type=bool)
+parser.add_argument("-file","--input_file",help= "Path to the file input",nargs=2)
+parser.add_argument("-hint N", "--hint_N", help= "Return a hint", nargs=1)
+parser.add_argument("-profile", "--profile")
+
+args=parser.parse_args()
+
+print("arg explain is ", args.explanation)
+print("path", args.input_file)
+print("hint", args.hint_N)
+
+
+
+
 
 def check_section(section, n):
 
