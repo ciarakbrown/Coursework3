@@ -52,17 +52,21 @@ DO NOT CHANGE CODE ABOVE THIS LINE
 '''
 parser = argparse.ArgumentParser()
 
-parser.add_argument("-explain","--explanation",help="Explain solving",type=bool)
-parser.add_argument("-file","--input_file",help= "Path to the file input",nargs=2)
-parser.add_argument("-hint N", "--hint_N", help= "Return a hint", nargs=1)
-parser.add_argument("-profile", "--profile")
+parser.add_argument("-explain",help= "Explain solving",type=bool)
+parser.add_argument("-file", help= "Path to the file input",nargs=2, type = str)
+parser.add_argument("-hint", help= "Return a hint", nargs=1, type = int)
+parser.add_argument("-profile", help = "Measures performance of your solver, in terms of time", type =bool  )
 
 args=parser.parse_args()
 
-print("arg explain is ", args.explanation)
-print("path", args.input_file)
-print("hint", args.hint_N)
+print("arg explain is ", args.explain)
+print("path", args.file)
+print("hint", args.hint)
+print("profile is", args.profile)
 
+main_args(*args) #from other file
+
+convert(filename) #from other file
 
 
 
@@ -72,6 +76,13 @@ def check_section(section, n):
 	if len(set(section)) == len(section) and sum(section) == sum([i for i in range(n+1)]):
 		return True
 	return False
+
+
+find_empty_locs(grid,n_rows, n_cols) #from other file
+
+recursive_solve(grid, n_rows, n_cols) #from other file , uses find_empties function
+
+check_solution(grid, n_rows, n_cols) #from sids?
 
 def get_squares(grid, n_rows, n_cols):
 
@@ -103,10 +114,23 @@ def check_solution(grid, n_rows, n_cols):
 		if check_section(row, n) == False:
 			return False
 
-	for i in range(n_rows**2):
+	for i in range(n_rows):
 		column = []
 		for row in grid:
 			column.append(row[i])
+		if not check_section(column, n):
+			return False
+		
+	for i in range(n_cols):
+        for j in range(n_rows):
+            square = []
+            for k in range(n_rows):
+                for l in range(n_cols):
+                    square.append(grid[j * n_rows + k][i * n_cols + l])
+            if not check_section(square, n):
+                return False
+	    
+	return True
 
 		if check_section(column, n) == False:
 			return False
@@ -119,10 +143,8 @@ def check_solution(grid, n_rows, n_cols):
 	return True
 
 
-from operations import find_empty
 
-
-def recursive_solve(grid, n_rows, n_cols):
+def recursive_solve(grid, n_rows, n_cols): ### WONT USE THIS ONE
 	'''
 	This function uses recursion to exhaustively search all possible solutions to a grid
 	until the solution is found
