@@ -130,9 +130,8 @@ def check_solution(grid, n_rows, n_cols):
             if not check_section(square, n):
                 return False
 	    
-	return True
 
-		if check_section(column, n) == False:
+	if check_section(column, n) == False:
 			return False
 
 	squares = get_squares(grid, n_rows, n_cols)
