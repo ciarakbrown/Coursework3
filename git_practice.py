@@ -64,6 +64,16 @@ print("path", args.file)
 print("hint", args.hint)
 print("profile is", args.profile)
 
+def convert(filename):
+	with open(filename, 'r', as f):
+		lines = f.readlines()
+	new_grid = []
+	for line in lines:
+		row = [int(num) for num in line.strip().split(', ')]
+		new_grid.append(row)
+	return new_grid
+
+
 
 def give_hint(grid, n_rows, n_cols):
 	solution = recursive_solve(grid, size[0], size[1])
@@ -81,6 +91,10 @@ def give_hint(grid, n_rows, n_cols):
             continue
         break
 
+#IZZY FUNCTION INPUT OUTPUT - USE THE CONVERT FUNCTION ABOVE^
+#CIARA PROFILE
+#AADITYA EXPLAIN
+
 def main_args(*args):
 	if args.explain:
 	if args.file		
@@ -88,15 +102,6 @@ def main_args(*args):
 		args.hint = int(args.hint)
 		give_hint(args.hint)	
     if args.profile:
-
-def convert(filename):
-	with open(filename, 'r', as f):
-		lines = f.readlines()
-	new_grid = []
-	for line in lines:
-		row = [int(num) for num in line.strip().split(', ')]
-		new_grid.append(row)
-	return new_grid
 
 
 
@@ -109,8 +114,6 @@ def check_section(section, n):
 
 
 find_empty(grid,n_rows, n_cols) #from ciara
-
-#recursive_solve(grid, n_rows, n_cols) #from other file , uses find_empties function
 
 def check_solution(grid, n_rows, n_cols):
 	'''
@@ -211,6 +214,7 @@ def recursive_solve(grid, n_rows, n_cols): ### WONT USE THIS ONE
 
 	#If we get here, we've tried all possible values. Return none to indicate the previous value is incorrect.
 	return None
+
 
 def random_solve(grid, n_rows, n_cols, max_tries=50000):
 	'''
