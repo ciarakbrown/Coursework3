@@ -64,9 +64,39 @@ print("path", args.file)
 print("hint", args.hint)
 print("profile is", args.profile)
 
-main_args(*args) #from other file
 
-convert(filename) #from other file
+def give_hint(grid, n_rows, n_cols):
+	solution = recursive_solve(grid, size[0], size[1])
+	hint_grid = [row[:] for row in grid]
+    hint_count = 0
+
+    for r in range(n_rows * n_cols):
+        for c in range(n_rows * n_cols):
+            if hint_count == args.hint:
+                break
+            if grid[r][c] == 0:
+                hint_grid[r][c] = solution[r][c]
+                hint_count += 1
+        else:
+            continue
+        break
+
+def main_args(*args):
+	if args.explain:
+	if args.file		
+	if args.hint:
+		args.hint = int(args.hint)
+		give_hint(args.hint)	
+    if args.profile:
+
+def convert(filename):
+	with open(filename, 'r', as f):
+		lines = f.readlines()
+	new_grid = []
+	for line in lines:
+		row = [int(num) for num in line.strip().split(', ')]
+		new_grid.append(row)
+	return new_grid
 
 
 
@@ -78,29 +108,10 @@ def check_section(section, n):
 	return False
 
 
-find_empty_locs(grid,n_rows, n_cols) #from other file
+find_empty(grid,n_rows, n_cols) #from ciara
 
-recursive_solve(grid, n_rows, n_cols) #from other file , uses find_empties function
+#recursive_solve(grid, n_rows, n_cols) #from other file , uses find_empties function
 
-check_solution(grid, n_rows, n_cols) #from sids?
-
-def get_squares(grid, n_rows, n_cols):
-
-	squares = []
-	for i in range(n_cols):
-		rows = (i*n_rows, (i+1)*n_rows)
-		for j in range(n_rows):
-			cols = (j*n_cols, (j+1)*n_cols)
-			square = []
-			for k in range(rows[0], rows[1]):
-				line = grid[k][cols[0]:cols[1]]
-				square +=line
-			squares.append(square)
-
-
-	return(squares)
-
-#To complete the first assignment, please write the code for the following function
 def check_solution(grid, n_rows, n_cols):
 	'''
 	This function is used to check whether a sudoku board has been correctly solved
@@ -141,6 +152,21 @@ def check_solution(grid, n_rows, n_cols):
 
 	return True
 
+def get_squares(grid, n_rows, n_cols):
+
+	squares = []
+	for i in range(n_cols):
+		rows = (i*n_rows, (i+1)*n_rows)
+		for j in range(n_rows):
+			cols = (j*n_cols, (j+1)*n_cols)
+			square = []
+			for k in range(rows[0], rows[1]):
+				line = grid[k][cols[0]:cols[1]]
+				square +=line
+			squares.append(square)
+
+
+	return(squares)
 
 
 def recursive_solve(grid, n_rows, n_cols): ### WONT USE THIS ONE
