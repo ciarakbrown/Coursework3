@@ -92,14 +92,18 @@ def give_hint(grid, n_rows, n_cols):
         break
 
 def explain(grid,n_rows,n_cols):
-	for i in range (len(grid)):
-                print(grid[i])
+        final_grid = ''
+        for i in range (len(grid)):
+                final_grid += (f'{grid[i]}\n')           
+        
+        exp_string = ''
         for x in range (0,len(grid)):
             for y in range (0,len(grid[x])):
                 if grid[x][y] != 0:
-                        print(f'Put {grid[x][y]} in location ({x}, {y})')
-                else:
-                        pass
+                        exp_string +=(f'Put {grid[x][y]} in location ({x}, {y})\n')
+
+        return_list = (final_grid,exp_string)
+        return return_list
 #IZZY FUNCTION INPUT OUTPUT - USE THE CONVERT FUNCTION ABOVE^
 #CIARA PROFILE
 
@@ -107,7 +111,7 @@ def explain(grid,n_rows,n_cols):
 
 def main_args(*args):
 	if args.explain:
-		#Would just run the function, not sure what grid so i am not sure what variables would be parsed in
+		print(explain(grid1,2,2)[0] ,'\n' + explain(grid1,2,2)[1])
 	if args.file		
 	if args.hint:
 		args.hint = int(args.hint)
