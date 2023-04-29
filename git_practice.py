@@ -91,12 +91,23 @@ def give_hint(grid, n_rows, n_cols):
             continue
         break
 
+def explain(grid,n_rows,n_cols):
+	for i in range (len(grid)):
+                print(grid[i])
+        for x in range (0,len(grid)):
+            for y in range (0,len(grid[x])):
+                if grid[x][y] != 0:
+                        print(f'Put {grid[x][y]} in location ({x}, {y})')
+                else:
+                        pass
 #IZZY FUNCTION INPUT OUTPUT - USE THE CONVERT FUNCTION ABOVE^
 #CIARA PROFILE
-#AADITYA EXPLAIN
+
+
 
 def main_args(*args):
 	if args.explain:
+		#Would just run the function, not sure what grid so i am not sure what variables would be parsed in
 	if args.file		
 	if args.hint:
 		args.hint = int(args.hint)
