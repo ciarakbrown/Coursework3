@@ -83,8 +83,29 @@ def print_sudoku(sudoku_grid):
                 print(sudoku_grid[i][j])
             else:
                 print(str(sudoku_grid[i][j]) + " ", end="")
+        
+
+def find_min_location(grid,n_colm,n_row):
+    min_location = (n_colm  *n_row) +1 
+    location = []
+    
+    for x in range (9):
+        for y in range(9):
+            if isinstance(grid[x][y],list) and len(grid[x][y])< min_location:
+                min_location = len(grid[x][y])
+                location = [x,y]
+                if min_location == 1:
+                    print(x+1,y+1)
+                    print(grid[x][y])
+                    break
+    return (location)
+
+    
+            
+
 
 
 new_list = convertgrid(grid1,3,3)
-print_sudoku(find_values(new_list,3,3))
+
+(print_sudoku(find_values(new_list,3,3)))
 
