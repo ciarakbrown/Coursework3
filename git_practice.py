@@ -1,9 +1,9 @@
 
-
 import random
 import copy
 import time
 import argparse
+import matplotlib.pyplot as plt
 
 #Grids 1-4 are 2x2
 grid1 = [
@@ -76,7 +76,7 @@ grid9 = [[0, 2, 0, 0, 0, 0, 0, 1, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 3, 1, 0, 0, 8, 0, 5, 7]]  # hard1
 
-grids = [(grid1, 2, 2), (grid2, 2, 2), (grid3, 2, 2), (grid4, 2, 2), (grid5, 2, 2), (grid6, 3, 2), (grid7, 3, 3), (grid8, 3, 3), (grid9, 3, 3)]
+grids = [(grid1, 2, 2), (grid2, 2, 2), (grid3, 2, 2), (grid4, 2, 2), (grid5, 2, 2), (grid6, 2, 3), (grid7, 3, 3), (grid8, 3, 3), (grid9, 3, 3)]
 '''
 ===================================
 DO NOT CHANGE CODE ABOVE THIS LINE
@@ -97,15 +97,13 @@ print("hint", args.hint)
 print("profile is", args.profile)
 
 def convert(filename):
-	with open(filename, 'r', as f):
+	with open(filename 'r' as f):
 		lines = f.readlines()
 	new_grid = []
 	for line in lines:
 		row = [int(num) for num in line.strip().split(', ')]
 		new_grid.append(row)
 	return new_grid
-
-
 
 def give_hint(grid, n_rows, n_cols):
 	solution = recursive_solve(grid, size[0], size[1])
@@ -126,8 +124,8 @@ def give_hint(grid, n_rows, n_cols):
 def explain(grid,n_rows,n_cols):
         final_grid = ''
         for i in range (len(grid)):
-                final_grid += (f'{grid[i]}\n')           
-        
+                final_grid += (f'{grid[i]}\n')
+
         exp_string = ''
         for x in range (0,len(grid)):
             for y in range (0,len(grid[x])):
@@ -143,124 +141,168 @@ def explain(grid,n_rows,n_cols):
 
 def main_args(*args):
 	if args.explain:
-		#print(explain(grid1,2,2)[0] ,'\n' + explain(grid1,2,2)[1]), I am not really sure about this part 
-	if args.file		
+		#print(explain(grid1,2,2)[0] ,'\n' + explain(grid1,2,2)[1]), I am not really sure about this part
+	if args.file
 	if args.hint:
 		args.hint = int(args.hint)
-		give_hint(args.hint)	
+		give_hint(args.hint)
     if args.profile:
 
 
-
-
 def check_section(section, n):
-
 	if len(set(section)) == len(section) and sum(section) == sum([i for i in range(n+1)]):
 		return True
 	return False
 
 
-find_empty(grid,n_rows, n_cols) #from ciara
+def get_squares(grid, n_rows, n_cols):
+    squares = []
+    for i in range(n_cols):
+        rows = (i * n_rows, (i + 1) * n_rows)
+        for j in range(n_rows):
+            cols = (j * n_cols, (j + 1) * n_cols)
+            square = []
+            for k in range(rows[0], rows[1]):
+                line = grid[k][cols[0]:cols[1]]
+                square += line
+            squares.append(square)
+
+    return (squares)
+
 
 def check_solution(grid, n_rows, n_cols):
-	'''
-	This function is used to check whether a sudoku board has been correctly solved
+    '''
+    This function is used to check whether a sudoku board has been correctly solved
+    args: grid - representation of a suduko board as a nested list.
+    returns: True (correct solution) or False (incorrect solution)
+    '''
 
-	args: grid - representation of a suduko board as a nested list.
-	returns: True (correct solution) or False (incorrect solution)
-	'''
-	n = n_rows*n_cols
+    if grid == None:
+        return False
 
-	for row in grid:
-		if check_section(row, n) == False:
-			return False
+    n = n_rows * n_cols
 
-	for i in range(n_rows):
-		column = []
-		for row in grid:
-			column.append(row[i])
-		if not check_section(column, n):
-			return False
-		
-	for i in range(n_cols):
-        for j in range(n_rows):
-            square = []
-            for k in range(n_rows):
-                for l in range(n_cols):
-                    square.append(grid[j * n_rows + k][i * n_cols + l])
-            if not check_section(square, n):
-                return False
-	    
+    for row in grid:
+        if check_section(row, n) == False:
+            return False
 
-	if check_section(column, n) == False:
-			return False
+    for i in range(n_rows * n_cols):
+        column = []
+        for row in grid:
+            column.append(row[i])
 
-	squares = get_squares(grid, n_rows, n_cols)
-	for square in squares:
-		if check_section(square, n) == False:
-			return False
+        if check_section(column, n) == False:
+            return False
 
-	return True
+    squares = get_squares(grid, n_rows, n_cols)
+    for square in squares:
+        if check_section(square, n) == False:
+            return False
 
-def get_squares(grid, n_rows, n_cols):
-
-	squares = []
-	for i in range(n_cols):
-		rows = (i*n_rows, (i+1)*n_rows)
-		for j in range(n_rows):
-			cols = (j*n_cols, (j+1)*n_cols)
-			square = []
-			for k in range(rows[0], rows[1]):
-				line = grid[k][cols[0]:cols[1]]
-				square +=line
-			squares.append(square)
+    return True
 
 
-	return(squares)
+def get_subgrids(grid, sub_grid_rows, sub_grid_cols):
+    subgrids = []
+    num_rows = len(grid)
+    num_cols = len(grid[0])
+
+    for r in range(0, num_rows, sub_grid_rows):
+        for c in range(0, num_cols, sub_grid_cols):
+            subgrid = []
+            for ir in range(r, r + sub_grid_rows):
+                for ic in range(c, c + sub_grid_cols):
+                    subgrid.append((ir, ic))
+
+            subgrids.append(subgrid)
+    return subgrids
 
 
-def recursive_solve(grid, n_rows, n_cols): ### WONT USE THIS ONE
-	'''
-	This function uses recursion to exhaustively search all possible solutions to a grid
-	until the solution is found
+def find_empty(grid, sub_grid_rows, sub_grid_cols):
+    '''
+    This function returns the index (i, j, k) to the first zero element in a sudoku grid
+    If no such element is found, it returns None
+    args: grids - a list of tuples, where each tuple contains a sudoku grid and the number of rows and columns in each sub-grid
+    return: A tuple (i,j,k) where i, j, and k are all integers, or None
+    '''
 
-	args: grid, n_rows, n_cols
-	return: A solved grid (as a nested list), or None
-	'''
+    num_rows = len(grid)
+    num_cols = len(grid[0])
+    full_set = set()
 
-	#N is the maximum integer considered in this board
-	n = n_rows*n_cols
-	#Find an empty place in the grid
-	empty = find_empty(grid)
+    for i in range(1, num_rows+1):
+        full_set.add(i)
 
-	#If there's no empty places left, check if we've found a solution
-	if not empty:
-		#If the solution is correct, return it.
-		if check_solution(grid, n_rows, n_cols):
-			return grid 
-		else:
-			#If the solution is incorrect, return None
-			return None
-	else:
-		row, col = empty 
+    found_empty = False
+    best_bag = full_set.copy()
+    answer = None
 
-	#Loop through possible values
-	for i in range(1, n+1):
+    subgrid_coordinates = get_subgrids(grid, sub_grid_rows, sub_grid_cols)
+    #print(subgrid_coordinates)
 
-			#Place the value into the grid
-			grid[row][col] = i
-			#Recursively solve the grid
-			ans = recursive_solve(grid, n_rows, n_cols)
-			#If we've found a solution, return it
-			if ans:
-				return ans 
+    #  iterate through grid looking for empties
+    for r in range(num_rows):
+        for c in range(num_cols):
+            if grid[r][c] == 0:
+                found_empty = True
+                bag = full_set.copy()
 
-			#If we couldn't find a solution, that must mean this value is incorrect.
-			#Reset the grid for the next iteration of the loop
-			grid[row][col] = 0 
+                #  search rows
+                for irow in range(num_rows):
+                    if grid[irow][c] != 0:
+                        bag.discard(grid[irow][c])
 
-	#If we get here, we've tried all possible values. Return none to indicate the previous value is incorrect.
-	return None
+                #  search cols
+                for icol in range(num_cols):
+                    if grid[r][icol] != 0:
+                        bag.discard(grid[r][icol])
+
+                #  determine which subgrid that empty cell is in
+                for subgrid in subgrid_coordinates:
+                    if (r, c) in subgrid:
+                        empty_subgrid = subgrid  # this is the subgrid that contains the empty cell
+
+                for j, k in empty_subgrid:
+                    sub_grid_value = grid[j][k]
+                    if sub_grid_value != 0:
+                        bag.discard(sub_grid_value)
+
+                if len(bag) < len(best_bag):
+                    best_bag = bag
+                    answer = r, c, best_bag
+
+    if not found_empty:
+        return None
+
+    return answer
+
+
+def recursive_solve(grid, n_rows, n_cols):
+    """
+    This function uses recursion to exhaustively search all possible solutions to a grid
+    until the solution is found
+    args: grid, n_rows, n_cols
+    return: A solved grid (as a nested list), or None
+    """
+
+    empty = find_empty(grid, n_rows, n_cols)
+
+    if not empty:
+        if check_solution(grid, n_rows, n_cols):
+            return grid
+        else:
+            return None
+
+    else:
+        row, col, bag = empty
+        for i in bag:
+            grid[row][col] = i
+            ans = recursive_solve(grid, n_rows, n_cols)
+            if ans:
+                return ans
+            grid[row][col] = 0
+
+    return None
 
 
 def random_solve(grid, n_rows, n_cols, max_tries=50000):
