@@ -226,42 +226,16 @@ def profile(grid_list):
         answers = time_diff_grids(recursive_solve, newgrid, sub_rows, sub_cols)
         average_times_recursive.append(answers)
 
-
+    #  time taken to solve each grid
     random_times_grid1 = average_times_random[0]
-    print(random_times_grid1)
     random_times_grid2 = average_times_random[1]
-    print(random_times_grid2)
     random_times_grid3 = average_times_random[2]
-    print(random_times_grid3)
 
     recursive_times_grid1 = average_times_recursive[0]
-    print(recursive_times_grid1)
     recursive_times_grid2 = average_times_recursive[1]
-    print(recursive_times_grid2)
     recursive_times_grid3 = average_times_recursive[2]
-    print(recursive_times_grid3)
 
-    N = 2
-    ind = np.arange(N)
-    width = 0.25
-
-    xvals = [random_times_grid1, recursive_times_grid1]  # grid 1
-    bar1 = plt.bar(ind, xvals, width, color='r')
-
-    yvals = [random_times_grid2, recursive_times_grid2]  # grid 2
-    bar2 = plt.bar(ind + width, yvals, width, color='g')
-
-    zvals = [random_times_grid3, recursive_times_grid3]  # grid 3
-    bar3 = plt.bar(ind + width * 2, zvals, width, color='b')
-
-    plt.xlabel("Type of solver")
-    plt.ylabel('Time taken to solve grids')
-    plt.title("Profile results")
-
-    plt.xticks(ind + width, ['Random solver', 'Recursive solver'])
-    plt.legend((bar1, bar2, bar3), ('Easy Grid', 'Med Grid', 'Hard Grid'))
-    plt.show()
-
+    #  plot graph
     solver_type = ("Random", "Recursive", "Wavefront")
     difficulty = {
         'Easy Grid': (random_times_grid1, recursive_times_grid1, 0),
@@ -281,15 +255,14 @@ def profile(grid_list):
         ax.bar_label(rects, padding=3)
         multiplier += 1
 
-    # Add some text for labels, title and custom x-axis tick labels, etc.
+    # labels
     ax.set_ylabel('Time (s)')
-    ax.set_title('Method of solving')
+    ax.set_title('Time comparison of different sudoku solvers')
     ax.set_xticks(x + width, solver_type)
     ax.legend(loc='upper left', ncols=3)
     ax.set_ylim(0, 0.015)
 
     plt.show()
-
 
 
 def main_args(*args):
