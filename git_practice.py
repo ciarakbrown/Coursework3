@@ -6,6 +6,7 @@ import copy
 import time
 import argparse
 import matplotlib.pyplot as plt
+import math
 
 #Grids 1-4 are 2x2
 grid1 = [
@@ -107,22 +108,22 @@ print("profile is", args.profile)
 #         new_grid.append(row)
 #     return new_grid
 
-# def give_hint(grid, n_rows, n_cols):
-#     solution = recursive_solve(grid, size[0], size[1])
-#     hint_grid = [row[:] for row in grid]
-#     hint_count = 0
+def give_hint(grid, n_rows, n_cols):
+    solution = recursive_solve(grid, n_rows, n_cols)
+    hint_grid = [row[:] for row in grid]
+    hint_count = 0
 
-#     for r in range(n_rows * n_cols):
-#         for c in range(n_rows * n_cols):
-#             if hint_count == args.hint:
-#                 break
-#             if grid[r][c] == 0:
-#                 hint_grid[r][c] = solution[r][c]
-#                 hint_count += 1
-#         else:
-#             continue
-        #break
-def input_output(input_file, output_file):
+    for r in range(n_rows * n_cols):
+        for c in range(n_rows * n_cols):
+            if hint_count == args.hint:
+                break
+            if grid[r][c] == 0:
+                hint_grid[r][c] = solution[r][c]
+                hint_count += 1
+        else:
+            continue
+
+def open_file(input_file, output_file):
     # Read puzzle from input file
     with open(input_file, 'r', encoding='utf-8') as f:
         lines = f.readlines()
@@ -135,6 +136,9 @@ def input_output(input_file, output_file):
                     nums.append(int(char))
             grid.append(nums)
         print(grid)
+    n_rows = math.ceil(math.sqrt(len(grid)))
+    n_cols = math.floor(math.sqrt(len(grid[0])))
+    return grid,n_rows,n_cols
     grids=[]
     grids.append(grid)
     n = len(grid)
@@ -180,14 +184,20 @@ def explain(grid,n_rows,n_cols):
 
 
 def main_args(*args):
-#     if args.explain:
-        #print(explain(grid1,2,2)[0] ,'\n' + explain(grid1,2,2)[1]), I am not really sure about this part
+    if args.explain:
+        print(explain(grid1,2,2)[0] ,'\n' + explain(grid1,2,2)[1]), I am not really sure about this part
     if args.file:
-        input_output("C:/Users/bridg/Downloads/easy1.txt","C:/Users/bridg/fcp-week14/empty.txt")
+        # input_output("C:/Users/bridg/Downloads/easy1.txt","C:/Users/bridg/fcp-week14/empty.txt")
+        INPUT,OUTPUT = args.file#[:] #args.file.args[:]
+        grid,n_rows,n_cols = open_file(INPUT)
+        save_file(grid,OUTPUT)
     if args.hint:
         args.hint = int(args.hint)
-        give_hint(args.hint)
-#    if args.profile:
+        give_hint(grid, n_rows, n_cols)
+    if args.profile:
+        profile()
+    if args.explain and args.hint:
+        explain(give_hint(args.hint))
 
 
 def check_section(section, n):
