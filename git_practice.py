@@ -178,8 +178,117 @@ def explain(grid,n_rows,n_cols):
 
         return_list = (final_grid,exp_string)
         return return_list
+
+
 #IZZY FUNCTION INPUT OUTPUT - USE THE CONVERT FUNCTION ABOVE^
-#CIARA PROFILE
+
+
+def time_diff_grids(solver, grid, sub_rows, sub_cols):
+    """
+    function that runs a sudoku solver 5 times
+    and returns the average time elapsed to solve
+    """
+
+    times = []
+
+    #  run each solver 5 times
+    for _ in range(5):
+        start_time = time.time()
+        solver_result = solver(grid, sub_rows, sub_cols)
+        elapsed_time = time.time() - start_time
+
+        #  if solver cannot solve grid, set time taken to a 'maximum' (50)
+        if check_solution(solver_result, sub_rows, sub_cols) is False:
+            elapsed_time = 31
+
+        #  add these 5 times to a list
+        times.append(elapsed_time)
+
+    #  sum the list and divide by 5 to find average
+    average_time = sum(times)/5
+    return average_time
+
+def profile(grid_list):
+    average_times_random = []
+    average_times_recursive = []
+
+    #  loop through each grid
+    for grid, sub_rows, sub_cols in grid_list:
+        newgrid = copy.deepcopy(grid)  # make copy of original
+
+        #  run the timer
+        #  append to list containing average time to solve each grid
+        answers = time_diff_grids(random_solve, newgrid, sub_rows, sub_cols)
+        average_times_random.append(answers)
+
+        #  same for recursive
+        newgrid = copy.deepcopy(grid)
+        answers = time_diff_grids(recursive_solve, newgrid, sub_rows, sub_cols)
+        average_times_recursive.append(answers)
+
+
+    random_times_grid1 = average_times_random[0]
+    print(random_times_grid1)
+    random_times_grid2 = average_times_random[1]
+    print(random_times_grid2)
+    random_times_grid3 = average_times_random[2]
+    print(random_times_grid3)
+
+    recursive_times_grid1 = average_times_recursive[0]
+    print(recursive_times_grid1)
+    recursive_times_grid2 = average_times_recursive[1]
+    print(recursive_times_grid2)
+    recursive_times_grid3 = average_times_recursive[2]
+    print(recursive_times_grid3)
+
+    N = 2
+    ind = np.arange(N)
+    width = 0.25
+
+    xvals = [random_times_grid1, recursive_times_grid1]  # grid 1
+    bar1 = plt.bar(ind, xvals, width, color='r')
+
+    yvals = [random_times_grid2, recursive_times_grid2]  # grid 2
+    bar2 = plt.bar(ind + width, yvals, width, color='g')
+
+    zvals = [random_times_grid3, recursive_times_grid3]  # grid 3
+    bar3 = plt.bar(ind + width * 2, zvals, width, color='b')
+
+    plt.xlabel("Type of solver")
+    plt.ylabel('Time taken to solve grids')
+    plt.title("Profile results")
+
+    plt.xticks(ind + width, ['Random solver', 'Recursive solver'])
+    plt.legend((bar1, bar2, bar3), ('Easy Grid', 'Med Grid', 'Hard Grid'))
+    plt.show()
+
+    solver_type = ("Random", "Recursive", "Wavefront")
+    difficulty = {
+        'Easy Grid': (random_times_grid1, recursive_times_grid1, 0),
+        'Medium Grid': (random_times_grid2, recursive_times_grid2, 0),
+        'Hard Grid': (random_times_grid3, recursive_times_grid3, 0),
+    }
+
+    x = np.arange(len(solver_type))  # the label locations
+    width = 0.25  # the width of the bars
+    multiplier = 0
+
+    fig, ax = plt.subplots(layout='constrained')
+
+    for attribute, measurement in difficulty.items():
+        offset = width * multiplier
+        rects = ax.bar(x + offset, measurement, width, label=attribute)
+        ax.bar_label(rects, padding=3)
+        multiplier += 1
+
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax.set_ylabel('Time (s)')
+    ax.set_title('Method of solving')
+    ax.set_xticks(x + width, solver_type)
+    ax.legend(loc='upper left', ncols=3)
+    ax.set_ylim(0, 0.015)
+
+    plt.show()
 
 
 
