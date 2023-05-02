@@ -76,20 +76,20 @@ def convert(filename):
 
 
 def give_hint(grid, n_rows, n_cols):
-	solution = recursive_solve(grid, size[0], size[1])
+	solution = recursive_solve(grid, n_rows, n_cols)
 	hint_grid = [row[:] for row in grid]
-    hint_count = 0
+	hint_count = 0
 
-    for r in range(n_rows * n_cols):
-        for c in range(n_rows * n_cols):
-            if hint_count == args.hint:
-                break
-            if grid[r][c] == 0:
-                hint_grid[r][c] = solution[r][c]
-                hint_count += 1
-        else:
-            continue
-        break
+	for r in range(n_rows * n_cols):
+		for c in range(n_rows * n_cols):
+			if hint_count == args.hint:
+				break
+			if grid[r][c] == 0:
+				hint_grid[r][c] = solution[r][c]
+				hint_count += 1
+			else:
+				continue
+		#break
 
 #IZZY FUNCTION INPUT OUTPUT - USE THE CONVERT FUNCTION ABOVE^
 #CIARA PROFILE
@@ -97,11 +97,15 @@ def give_hint(grid, n_rows, n_cols):
 
 def main_args(*args):
 	if args.explain:
-	if args.file		
-	if args.hint:
+
+	elif args.file:	
+
+	elif args.hint:
 		args.hint = int(args.hint)
-		give_hint(args.hint)	
-    if args.profile:
+		give_hint(args.hint)
+
+    else args.profile:
+
 
 
 
@@ -172,7 +176,7 @@ def get_squares(grid, n_rows, n_cols):
 	return(squares)
 
 
-def recursive_solve(grid, n_rows, n_cols): ### WONT USE THIS ONE
+def recursive_solve(grid, n_rows, n_cols): 
 	'''
 	This function uses recursion to exhaustively search all possible solutions to a grid
 	until the solution is found
