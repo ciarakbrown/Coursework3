@@ -7,42 +7,42 @@ import matplotlib.pyplot as plt
 
 #Grids 1-4 are 2x2
 grid1 = [
-		[1, 0, 4, 2],
-		[4, 2, 1, 3],
-		[2, 1, 3, 4],
-		[3, 4, 2, 1]]
+        [1, 0, 4, 2],
+        [4, 2, 1, 3],
+        [2, 1, 3, 4],
+        [3, 4, 2, 1]]
 
 grid2 = [
-		[1, 0, 4, 2],
-		[4, 2, 1, 3],
-		[2, 1, 0, 4],
-		[3, 4, 2, 1]]
+        [1, 0, 4, 2],
+        [4, 2, 1, 3],
+        [2, 1, 0, 4],
+        [3, 4, 2, 1]]
 
 grid3 = [
-		[1, 0, 4, 2],
-		[4, 2, 1, 0],
-		[2, 1, 0, 4],
-		[0, 4, 2, 1]]
+        [1, 0, 4, 2],
+        [4, 2, 1, 0],
+        [2, 1, 0, 4],
+        [0, 4, 2, 1]]
 
 grid4 = [
-		[1, 0, 4, 2],
-		[0, 2, 1, 0],
-		[2, 1, 0, 4],
-		[0, 4, 2, 1]]
+        [1, 0, 4, 2],
+        [0, 2, 1, 0],
+        [2, 1, 0, 4],
+        [0, 4, 2, 1]]
 
 grid5 = [
-		[1, 0, 0, 2],
-		[0, 0, 1, 0],
-		[0, 1, 0, 4],
-		[0, 0, 0, 1]]
+        [1, 0, 0, 2],
+        [0, 0, 1, 0],
+        [0, 1, 0, 4],
+        [0, 0, 0, 1]]
 
 grid6 = [
-		[0, 0, 6, 0, 0, 3],
-		[5, 0, 0, 0, 0, 0],
-		[0, 1, 3, 4, 0, 0],
-		[0, 0, 0, 0, 0, 6],
-		[0, 0, 1, 0, 0, 0],
-		[0, 5, 0, 0, 6, 4]]
+        [0, 0, 6, 0, 0, 3],
+        [5, 0, 0, 0, 0, 0],
+        [0, 1, 3, 4, 0, 0],
+        [0, 0, 0, 0, 0, 6],
+        [0, 0, 1, 0, 0, 0],
+        [0, 5, 0, 0, 6, 4]]
 
 grid7 = [
     [9, 0, 6, 0, 0, 1, 0, 4, 0],
@@ -96,30 +96,68 @@ print("path", args.file)
 print("hint", args.hint)
 print("profile is", args.profile)
 
-def convert(filename):
-	with open(filename 'r' as f):
-		lines = f.readlines()
-	new_grid = []
-	for line in lines:
-		row = [int(num) for num in line.strip().split(', ')]
-		new_grid.append(row)
-	return new_grid
+# def convert(filename):
+#     with open(filename 'r' as f):
+#         lines = f.readlines()
+#     new_grid = []
+#     for line in lines:
+#         row = [int(num) for num in line.strip().split(', ')]
+#         new_grid.append(row)
+#     return new_grid
 
-def give_hint(grid, n_rows, n_cols):
-	solution = recursive_solve(grid, size[0], size[1])
-	hint_grid = [row[:] for row in grid]
-    hint_count = 0
+# def give_hint(grid, n_rows, n_cols):
+#     solution = recursive_solve(grid, size[0], size[1])
+#     hint_grid = [row[:] for row in grid]
+#     hint_count = 0
 
-    for r in range(n_rows * n_cols):
-        for c in range(n_rows * n_cols):
-            if hint_count == args.hint:
-                break
-            if grid[r][c] == 0:
-                hint_grid[r][c] = solution[r][c]
-                hint_count += 1
-        else:
-            continue
-        break
+#     for r in range(n_rows * n_cols):
+#         for c in range(n_rows * n_cols):
+#             if hint_count == args.hint:
+#                 break
+#             if grid[r][c] == 0:
+#                 hint_grid[r][c] = solution[r][c]
+#                 hint_count += 1
+#         else:
+#             continue
+        #break
+def input_output(input_file, output_file):
+    # Read puzzle from input file
+    with open(input_file, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+        grid = []
+        for line in lines:
+            nums = []
+            
+            for char in line.strip():
+                if char.isdigit():
+                    nums.append(int(char))
+            grid.append(nums)
+        print(grid)
+    grids=[]
+    grids.append(grid)
+    n = len(grid)
+    print (n)
+    if n == 9:
+        n_rows = 3
+        n_cols = 3
+    elif n == 4:
+        n_rows = 2
+        n_cols = 2
+    
+    
+#    for (i, (grid, n_rows, n_cols)) in enumerate(grids):
+        
+
+    #Write puzzle to output file
+    with open(output_file, 'w') as f:
+        grid = solve(grid, n_rows, n_cols)
+        print(grid)
+        for row in grid:
+            print(row)
+            f.write(grid[row])
+            
+        f.write(','.join(str(num) for num in row))
+        f.write('\n')
 
 def explain(grid,n_rows,n_cols):
         final_grid = ''
@@ -140,19 +178,20 @@ def explain(grid,n_rows,n_cols):
 
 
 def main_args(*args):
-	if args.explain:
-		#print(explain(grid1,2,2)[0] ,'\n' + explain(grid1,2,2)[1]), I am not really sure about this part
-	if args.file
-	if args.hint:
-		args.hint = int(args.hint)
-		give_hint(args.hint)
-    if args.profile:
+#     if args.explain:
+        #print(explain(grid1,2,2)[0] ,'\n' + explain(grid1,2,2)[1]), I am not really sure about this part
+    if args.file:
+        input_output("C:/Users/bridg/Downloads/easy1.txt","C:/Users/bridg/fcp-week14/empty.txt")
+    if args.hint:
+        args.hint = int(args.hint)
+        give_hint(args.hint)
+#    if args.profile:
 
 
 def check_section(section, n):
-	if len(set(section)) == len(section) and sum(section) == sum([i for i in range(n+1)]):
-		return True
-	return False
+    if len(set(section)) == len(section) and sum(section) == sum([i for i in range(n+1)]):
+        return True
+    return False
 
 
 def get_squares(grid, n_rows, n_cols):
@@ -306,50 +345,50 @@ def recursive_solve(grid, n_rows, n_cols):
 
 
 def random_solve(grid, n_rows, n_cols, max_tries=50000):
-	'''
-	This function uses random trial and error to solve a Sudoku grid
+    '''
+    This function uses random trial and error to solve a Sudoku grid
 
-	args: grid, n_rows, n_cols, max_tries
-	return: A solved grid (as a nested list), or the original grid if no solution is found
-	'''
+    args: grid, n_rows, n_cols, max_tries
+    return: A solved grid (as a nested list), or the original grid if no solution is found
+    '''
 
-	for i in range(max_tries):
-		possible_solution = fill_board_randomly(grid, n_rows, n_cols)
-		if check_solution(possible_solution, n_rows, n_cols):
-			return possible_solution
+    for i in range(max_tries):
+        possible_solution = fill_board_randomly(grid, n_rows, n_cols)
+        if check_solution(possible_solution, n_rows, n_cols):
+            return possible_solution
 
-	return grid
+    return grid
 
 def fill_board_randomly(grid, n_rows, n_cols):
-	'''
-	This function will fill an unsolved Sudoku grid with random numbers
+    '''
+    This function will fill an unsolved Sudoku grid with random numbers
 
-	args: grid, n_rows, n_cols
-	return: A grid with all empty values filled in
-	'''
-	n = n_rows*n_cols
-	#Make a copy of the original grid
-	filled_grid = copy.deepcopy(grid)
+    args: grid, n_rows, n_cols
+    return: A grid with all empty values filled in
+    '''
+    n = n_rows*n_cols
+    #Make a copy of the original grid
+    filled_grid = copy.deepcopy(grid)
 
-	#Loop through the rows
-	for i in range(len(grid)):
-		#Loop through the columns
-		for j in range(len(grid[0])):
-			#If we find a zero, fill it in with a random integer
-			if grid[i][j] == 0:
-				filled_grid[i][j] = random.randint(1, n)
+    #Loop through the rows
+    for i in range(len(grid)):
+        #Loop through the columns
+        for j in range(len(grid[0])):
+            #If we find a zero, fill it in with a random integer
+            if grid[i][j] == 0:
+                filled_grid[i][j] = random.randint(1, n)
 
-	return filled_grid 
+    return filled_grid 
 
 def solve(grid, n_rows, n_cols):
 
-	'''
-	Solve function for Sudoku coursework.
-	Comment out one of the lines below to either use the random or recursive solver
-	'''
-	
-	#return random_solve(grid, n_rows, n_cols)
-	return recursive_solve(grid, n_rows, n_cols)
+    '''
+    Solve function for Sudoku coursework.
+    Comment out one of the lines below to either use the random or recursive solver
+    '''
+    
+    #return random_solve(grid, n_rows, n_cols)
+    return recursive_solve(grid, n_rows, n_cols)
 
 '''
 ===================================
@@ -358,27 +397,27 @@ DO NOT CHANGE CODE BELOW THIS LINE
 '''
 def main():
 
-	points = 0
+    points = 0
 
-	print("Running test script for coursework 1")
-	print("====================================")
-	
-	for (i, (grid, n_rows, n_cols)) in enumerate(grids):
-		print("Solving grid: %d" % (i+1))
-		start_time = time.time()
-		solution = solve(grid, n_rows, n_cols)
-		elapsed_time = time.time() - start_time
-		print("Solved in: %f seconds" % elapsed_time)
-		print(solution)
-		if check_solution(solution, n_rows, n_cols):
-			print("grid %d correct" % (i+1))
-			points = points + 10
-		else:
-			print("grid %d incorrect" % (i+1))
+    print("Running test script for coursework 1")
+    print("====================================")
+    
+    for (i, (grid, n_rows, n_cols)) in enumerate(grids):
+        print("Solving grid: %d" % (i+1))
+        start_time = time.time()
+        solution = solve(grid, n_rows, n_cols)
+        elapsed_time = time.time() - start_time
+        print("Solved in: %f seconds" % elapsed_time)
+        print(solution)
+        if check_solution(solution, n_rows, n_cols):
+            print("grid %d correct" % (i+1))
+            points = points + 10
+        else:
+            print("grid %d incorrect" % (i+1))
 
-	print("====================================")
-	print("Test script complete, Total points: %d" % points)
+    print("====================================")
+    print("Test script complete, Total points: %d" % points)
 
 
 if __name__ == "__main__":
-	main()
+    main()
