@@ -7,6 +7,7 @@ import time
 import argparse
 import matplotlib.pyplot as plt
 import math
+import numpy as np
 
 #Grids 1-4 are 2x2
 grid1 = [
@@ -99,14 +100,6 @@ print("path", args.file)
 print("hint", args.hint)
 print("profile is", args.profile)
 
-# def convert(filename):
-#     with open(filename 'r' as f):
-#         lines = f.readlines()
-#     new_grid = []
-#     for line in lines:
-#         row = [int(num) for num in line.strip().split(', ')]
-#         new_grid.append(row)
-#     return new_grid
 
 def give_hint(grid, n_rows, n_cols):
     solution = recursive_solve(grid, n_rows, n_cols)
@@ -123,14 +116,12 @@ def give_hint(grid, n_rows, n_cols):
         else:
             continue
 
-def open_file(input_file, output_file):
-    # Read puzzle from input file
+def open_file(input_file):
     with open(input_file, 'r', encoding='utf-8') as f:
         lines = f.readlines()
         grid = []
         for line in lines:
             nums = []
-            
             for char in line.strip():
                 if char.isdigit():
                     nums.append(int(char))
@@ -138,32 +129,22 @@ def open_file(input_file, output_file):
         print(grid)
     n_rows = math.ceil(math.sqrt(len(grid)))
     n_cols = math.floor(math.sqrt(len(grid[0])))
+    solved_grid = recursive_solve(grid, n_rows, n_cols)
     return grid,n_rows,n_cols
-    grids=[]
-    grids.append(grid)
-    n = len(grid)
-    print (n)
-    if n == 9:
-        n_rows = 3
-        n_cols = 3
-    elif n == 4:
-        n_rows = 2
-        n_cols = 2
-    
-    
-#    for (i, (grid, n_rows, n_cols)) in enumerate(grids):
-        
+    return solved_grid
 
-    #Write puzzle to output file
+
+def output_file(output_file,solved_grid):
     with open(output_file, 'w') as f:
-        grid = solve(grid, n_rows, n_cols)
-        print(grid)
-        for row in grid:
-            print(row)
-            f.write(grid[row])
+        for row in solved_grid:
+            #print(row)
+            f.write[row]
             
         f.write(','.join(str(num) for num in row))
         f.write('\n')
+    
+    
+
 
 def explain(grid,n_rows,n_cols):
         final_grid = ''
@@ -270,16 +251,16 @@ def main_args(*args):
         print(explain(grid1,2,2)[0] ,'\n' + explain(grid1,2,2)[1]), #I am not really sure about this part
     if args.file:
         # input_output("C:/Users/bridg/Downloads/easy1.txt","C:/Users/bridg/fcp-week14/empty.txt")
-        INPUT,OUTPUT = args.file#[:] #args.file.args[:]
+        INPUT,OUTPUT = args.file
         grid,n_rows,n_cols = open_file(INPUT)
-        save_file(grid,OUTPUT)
+        output_file(grid,OUTPUT)
     if args.hint:
         args.hint = int(args.hint)
         give_hint(grid, n_rows, n_cols)
     if args.profile:
         profile()
     if args.explain and args.hint:
-        explain(give_hint(args.hint))
+        explain(give_hint(grid, n_rows, n_cols))
 
 
 def check_section(section, n):
