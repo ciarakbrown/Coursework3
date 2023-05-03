@@ -138,10 +138,10 @@ def output_file(output_file,solved_grid):
     with open(output_file, 'w') as f:
         for row in solved_grid:
             #print(row)
-            f.write[row]
+            f.write(row)
             
-        f.write(','.join(str(num) for num in row))
-        f.write('\n')
+            f.write(','.join(str(num) for num in row))
+            f.write('\n')
     
     
 
@@ -260,7 +260,7 @@ def main_args(*args):
     if args.file:
         INPUT,OUTPUT = args.file
         grid,n_rows,n_cols = open_file(INPUT)
-        output_file(grid,OUTPUT)
+        output_file(OUTPUT, grid)
     if args.hint:
         args.hint = int(args.hint)
         give_hint(grid, n_rows, n_cols)
