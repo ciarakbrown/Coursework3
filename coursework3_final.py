@@ -190,13 +190,14 @@ def time_diff_grids(solver, grid, sub_rows, sub_cols):
 def profile(grid_list):
     average_times_random = []
     average_times_recursive = []
+    average_times_wavefront = []
 
     #  loop through each grid
     for grid, sub_rows, sub_cols in grid_list:
         newgrid = copy.deepcopy(grid)  # make copy of original
 
         #  run the timer
-        #  append to list containing average time to solve each grid
+        # append to list containing average time to solve each grid
         answers = time_diff_grids(random_solve, newgrid, sub_rows, sub_cols)
         average_times_random.append(answers)
 
@@ -205,7 +206,11 @@ def profile(grid_list):
         answers = time_diff_grids(recursive_solve, newgrid, sub_rows, sub_cols)
         average_times_recursive.append(answers)
 
-    #  time taken to solve each grid
+        #  same for wavefront
+        newgrid = copy.deepcopy(grid)
+        answers = time_diff_grids(wavefront_solve, newgrid, sub_rows, sub_cols)
+        average_times_wavefront.append(answers)
+
     random_times_grid1 = average_times_random[0]
     random_times_grid2 = average_times_random[1]
     random_times_grid3 = average_times_random[2]
@@ -214,12 +219,15 @@ def profile(grid_list):
     recursive_times_grid2 = average_times_recursive[1]
     recursive_times_grid3 = average_times_recursive[2]
 
-    #  plot graph
+    wavefront_times_grid1 = average_times_wavefront[0]
+    wavefront_times_grid2 = average_times_wavefront[1]
+    wavefront_times_grid3 = average_times_wavefront[2]
+
     solver_type = ("Random", "Recursive", "Wavefront")
     difficulty = {
-        'Easy Grid': (random_times_grid1, recursive_times_grid1, 0),
-        'Medium Grid': (random_times_grid2, recursive_times_grid2, 0),
-        'Hard Grid': (random_times_grid3, recursive_times_grid3, 0),
+        'Easy Grid': (random_times_grid1, recursive_times_grid1, wavefront_times_grid1),
+        'Medium Grid': (random_times_grid2, recursive_times_grid2, wavefront_times_grid2),
+        'Hard Grid': (random_times_grid3, recursive_times_grid3, wavefront_times_grid3),
     }
 
     x = np.arange(len(solver_type))  # the label locations
@@ -234,14 +242,16 @@ def profile(grid_list):
         ax.bar_label(rects, padding=3)
         multiplier += 1
 
-    # labels
+    # Add some text for labels, title and custom x-axis tick labels, etc.
     ax.set_ylabel('Time (s)')
-    ax.set_title('Time comparison of different sudoku solvers')
+    ax.set_title('Method of solving')
     ax.set_xticks(x + width, solver_type)
     ax.legend(loc='upper left', ncols=3)
-    ax.set_ylim(0, 0.015)
+    ax.set_ylim(0, 0.013)
 
     plt.show()
+
+    print('if time = 0, solver is unsuccessful')
 
 
 def main_args(*args):
@@ -278,7 +288,7 @@ def get_squares(grid, n_rows, n_cols):
                 square += line
             squares.append(square)
 
-    return (squares)
+    return squares
 
 
 def check_solution(grid, n_rows, n_cols):
@@ -288,13 +298,13 @@ def check_solution(grid, n_rows, n_cols):
     returns: True (correct solution) or False (incorrect solution)
     '''
 
-    if grid == None:
+    if grid is None:
         return False
 
     n = n_rows * n_cols
 
     for row in grid:
-        if check_section(row, n) == False:
+        if not check_section(row, n):
             return False
 
     for i in range(n_rows * n_cols):
@@ -302,12 +312,12 @@ def check_solution(grid, n_rows, n_cols):
         for row in grid:
             column.append(row[i])
 
-        if check_section(column, n) == False:
+        if not check_section(column, n):
             return False
 
     squares = get_squares(grid, n_rows, n_cols)
     for square in squares:
-        if check_section(square, n) == False:
+        if not check_section(square, n):
             return False
 
     return True
@@ -330,12 +340,12 @@ def get_subgrids(grid, sub_grid_rows, sub_grid_cols):
 
 
 def find_empty(grid, sub_grid_rows, sub_grid_cols):
-    '''
+    """
     This function returns the index (i, j, k) to the first zero element in a sudoku grid
     If no such element is found, it returns None
     args: grids - a list of tuples, where each tuple contains a sudoku grid and the number of rows and columns in each sub-grid
     return: A tuple (i,j,k) where i, j, and k are all integers, or None
-    '''
+    """
 
     num_rows = len(grid)
     num_cols = len(grid[0])
@@ -349,7 +359,6 @@ def find_empty(grid, sub_grid_rows, sub_grid_cols):
     answer = None
 
     subgrid_coordinates = get_subgrids(grid, sub_grid_rows, sub_grid_cols)
-    #print(subgrid_coordinates)
 
     #  iterate through grid looking for empties
     for r in range(num_rows):
@@ -417,12 +426,12 @@ def recursive_solve(grid, n_rows, n_cols):
 
 
 def random_solve(grid, n_rows, n_cols, max_tries=50000):
-    '''
+    """
     This function uses random trial and error to solve a Sudoku grid
 
     args: grid, n_rows, n_cols, max_tries
     return: A solved grid (as a nested list), or the original grid if no solution is found
-    '''
+    """
 
     for i in range(max_tries):
         possible_solution = fill_board_randomly(grid, n_rows, n_cols)
@@ -431,22 +440,23 @@ def random_solve(grid, n_rows, n_cols, max_tries=50000):
 
     return grid
 
+
 def fill_board_randomly(grid, n_rows, n_cols):
-    '''
+    """
     This function will fill an unsolved Sudoku grid with random numbers
 
     args: grid, n_rows, n_cols
     return: A grid with all empty values filled in
-    '''
+    """
     n = n_rows*n_cols
-    #Make a copy of the original grid
+    #  make a copy of the original grid
     filled_grid = copy.deepcopy(grid)
 
-    #Loop through the rows
+    #  Loop through the rows
     for i in range(len(grid)):
-        #Loop through the columns
+        #  Loop through the columns
         for j in range(len(grid[0])):
-            #If we find a zero, fill it in with a random integer
+            #  If we find a zero, fill it in with a random integer
             if grid[i][j] == 0:
                 filled_grid[i][j] = random.randint(1, n)
 
@@ -462,11 +472,13 @@ def solve(grid, n_rows, n_cols):
     #return random_solve(grid, n_rows, n_cols)
     return recursive_solve(grid, n_rows, n_cols)
 
-'''
+"""
 ===================================
 DO NOT CHANGE CODE BELOW THIS LINE
 ===================================
-'''
+"""
+
+
 def main():
 
     points = 0
