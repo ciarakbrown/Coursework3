@@ -185,7 +185,7 @@ def explain(grid,n_rows,n_cols):
 
 def main_args(*args):
     if args.explain:
-        print(explain(grid1,2,2)[0] ,'\n' + explain(grid1,2,2)[1]), I am not really sure about this part
+        print(explain(grid1,2,2)[0] ,'\n' + explain(grid1,2,2)[1]), #I am not really sure about this part
     if args.file:
         # input_output("C:/Users/bridg/Downloads/easy1.txt","C:/Users/bridg/fcp-week14/empty.txt")
         INPUT,OUTPUT = args.file#[:] #args.file.args[:]
