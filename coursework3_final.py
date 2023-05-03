@@ -118,7 +118,7 @@ def give_hint(grid, n_rows, n_cols):
             continue
 
 def open_file(input_file):
-    with open(input_file, 'r', encoding='utf-8') as f:
+    with open(input_file, 'r') as f:
         lines = f.readlines()
         grid = []
         for line in lines:
@@ -128,18 +128,12 @@ def open_file(input_file):
                     nums.append(int(char))
             grid.append(nums)
         print(grid)
-    n_rows = math.ceil(math.sqrt(len(grid)))
-    n_cols = math.floor(math.sqrt(len(grid[0])))
-    solved_grid = recursive_solve(grid, n_rows, n_cols)
-    return grid,n_rows,n_cols, solved_grid
+    
+    return grid
 
-
-def output_file(output_file,solved_grid):
+def output_file(output_file, solved_grid):
     with open(output_file, 'w') as f:
         for row in solved_grid:
-            #print(row)
-            f.write(row)
-            
             f.write(','.join(str(num) for num in row))
             f.write('\n')
     
@@ -255,19 +249,23 @@ def profile(grid_list):
 
 
 def main_args(*args):
-    if args.explain:
-        print(explain(grid1,2,2)[0] ,'\n' + explain(grid1,2,2)[1])
+    #if args.explain:
+        #print(explain(grid1,2,2)[0] ,'\n' + explain(grid1,2,2)[1])
     if args.file:
-        INPUT,OUTPUT = args.file
-        grid,n_rows,n_cols = open_file(INPUT)
-        output_file(OUTPUT, grid)
+        INPUT,OUTPUT = args.file[0], args.file[1]
+        print(INPUT, OUTPUT)
+        grid = open_file(INPUT)
+        n_rows = math.ceil(math.sqrt(len(grid)))
+        n_cols = math.floor(math.sqrt(len(grid[0])))
+        solved_grid = recursive_solve(grid, n_rows, n_cols)
+        output_file(OUTPUT, solved_grid)
     if args.hint:
         args.hint = int(args.hint)
         give_hint(grid, n_rows, n_cols)
     if args.profile:
         profile()
-    if args.explain and args.hint:
-        explain(give_hint(grid, n_rows, n_cols))
+    #if args.explain and args.hint:
+        #explain(give_hint(grid, n_rows, n_cols))
 
 
 def check_section(section, n):
@@ -472,12 +470,20 @@ def solve(grid, n_rows, n_cols):
     #return random_solve(grid, n_rows, n_cols)
     return recursive_solve(grid, n_rows, n_cols)
 
+# if args.file:
+#         INPUT,OUTPUT = args.file[0], args.file[1]
+#         print(INPUT, OUTPUT)
+#         grid = open_file(INPUT)
+#         n_rows = math.ceil(math.sqrt(len(grid)))
+#         n_cols = math.floor(math.sqrt(len(grid[0])))
+#         solved_grid = recursive_solve(grid, n_rows, n_cols)
+#         output_file(OUTPUT, solved_grid)
+
 """
 ===================================
 DO NOT CHANGE CODE BELOW THIS LINE
 ===================================
 """
-
 
 def main():
 
