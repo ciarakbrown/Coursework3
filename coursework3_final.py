@@ -187,6 +187,8 @@ def time_diff_grids(solver, grid, sub_rows, sub_cols):
     average_time = sum(times)/5
     return average_time
 
+from task3 import wavefront_solve
+
 def profile(grid_list):
     average_times_random = []
     average_times_recursive = []
