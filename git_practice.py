@@ -146,22 +146,20 @@ def output_file(output_file,solved_grid):
     
 
 
-def explain(grid,n_rows,n_cols):
-        final_grid = ''
-        for i in range (len(grid)):
-                final_grid += (f'{grid[i]}\n')
+# def explain(grid):
+#         # final_grid = ''
+#         # for i in range (len(grid)):
+#         #     final_grid += (grid[i])
 
-        exp_string = ''
-        for x in range (0,len(grid)):
-            for y in range (0,len(grid[x])):
-                if grid[x][y] != 0:
-                        exp_string +=(f'Put {grid[x][y]} in location ({x}, {y})\n')
+#         exp_string = ''
+#         for x in range (0,len(grid)):
+#             for y in range (0,len(grid[x])):
+#                 if grid[x][y] != 0:
+#                     exp_string +=(f'Put {grid[x][y]} in location ({x}, {y})\n')
 
-        return_list = (final_grid,exp_string)
-        return return_list
+#         return_list = (exp_string)
+#         return return_list
 
-
-#IZZY FUNCTION INPUT OUTPUT - USE THE CONVERT FUNCTION ABOVE^
 
 
 def time_diff_grids(solver, grid, sub_rows, sub_cols):
@@ -248,9 +246,8 @@ def profile(grid_list):
 
 def main_args(*args):
     if args.explain:
-        print(explain(grid1,2,2)[0] ,'\n' + explain(grid1,2,2)[1]), #I am not really sure about this part
+        print(explain(grid1,2,2)[0] ,'\n' + explain(grid1,2,2)[1])
     if args.file:
-        # input_output("C:/Users/bridg/Downloads/easy1.txt","C:/Users/bridg/fcp-week14/empty.txt")
         INPUT,OUTPUT = args.file
         grid,n_rows,n_cols = open_file(INPUT)
         output_file(grid,OUTPUT)
