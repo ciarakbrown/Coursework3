@@ -5,7 +5,8 @@ import random
 import copy
 import time
 import argparse
-import matplotlib.pyplot as plt
+
+from matplotlib import pyplot as plt
 import math
 import numpy as np
 
@@ -130,8 +131,7 @@ def open_file(input_file):
     n_rows = math.ceil(math.sqrt(len(grid)))
     n_cols = math.floor(math.sqrt(len(grid[0])))
     solved_grid = recursive_solve(grid, n_rows, n_cols)
-    return grid,n_rows,n_cols
-    return solved_grid
+    return grid,n_rows,n_cols, solved_grid
 
 
 def output_file(output_file,solved_grid):
