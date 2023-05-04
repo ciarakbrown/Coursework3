@@ -250,7 +250,6 @@ def time_diff_grids(solver, grid, sub_rows, sub_cols):
 #     print('if time = 0, solver is unsuccessful')
 
 
-
 def check_section(section, n):
     if len(set(section)) == len(section) and sum(section) == sum([i for i in range(n+1)]):
         return True
@@ -443,15 +442,134 @@ def fill_board_randomly(grid, n_rows, n_cols):
 
     return filled_grid 
 
-def solve(grid, n_rows, n_cols):
 
-    '''
-    Solve function for Sudoku coursework.
-    Comment out one of the lines below to either use the random or recursive solver
-    '''
-    
-    #return random_solve(grid, n_rows, n_cols)
-    return recursive_solve(grid, n_rows, n_cols)
+def find_empty_wavefront(grid, sub_grids, available_data):
+    ans = None
+    best_intersection = set()
+    for i in range(1 + len(grid)):
+        best_intersection.add(i)
+
+    sub_grid_available, row_available, col_available = available_data
+    sub_grids_len = len(sub_grids)
+    for sub_grid_index in range(sub_grids_len):
+        sub_grid = sub_grids[sub_grid_index]
+        for coord in sub_grid:
+            r, c = coord
+            if grid[r][c] == 0:
+                intersection = sub_grid_available[sub_grid_index] & row_available[r] & col_available[c]
+
+                if len(intersection) == 1:
+                    return r, c, sub_grid_index, intersection
+                elif len(intersection) < len(best_intersection):
+                    best_intersection = intersection
+                    ans = (r, c, sub_grid_index, best_intersection)
+    return ans
+
+
+def recursive_wavefront(grid, n_rows, n_cols, sub_grids, available_data):
+    next_cell = find_empty_wavefront(grid, sub_grids, available_data)
+
+    # If there's no empty places left, check if we've found a solution
+    if not next_cell:
+        # If the solution is correct, return it.
+        if check_solution(grid, n_rows, n_cols):
+            return grid
+        else:
+            # If the solution is incorrect, return None
+            return None
+    else:
+        row, col, sub_grid_index, bag = next_cell
+
+        # Loop through possible values
+        for i in bag:
+
+            # Place the value into the grid
+            sub_grid_available, row_available, col_available = available_data
+            sub_grid_available[sub_grid_index].discard(i)
+            row_available[row].discard(i)
+            col_available[col].discard(i)
+            new_available_data = (sub_grid_available, row_available, col_available)
+            grid[row][col] = i
+            # Recursively solve the grid
+            ans = recursive_wavefront(grid, n_rows, n_cols, sub_grids, new_available_data)
+            # If we've found a solution, return it
+            if ans:
+                return ans
+
+                # If we couldn't find a solution, that must mean this value is incorrect.
+            # Reset the grid for the next iteration of the loop
+
+            sub_grid_available[sub_grid_index].add(i)
+            row_available[row].add(i)
+            col_available[col].add(i)
+            available_data = (sub_grid_available, row_available, col_available)
+
+            grid[row][col] = 0
+
+            # If we get here, we've tried all possible values. Return none to indicate the previous value is incorrect.
+    return None
+
+
+def initial_available(grid, n_rows, n_cols, sub_grids):
+    sub_grid_available = []
+    row_available = []
+    col_available = []
+
+    num_rows = len(grid)
+    num_columns = len(grid[0])
+
+    all_poss = set()
+    for poss in range(1, 1 + (n_rows * n_cols)):
+        all_poss.add(poss)
+
+    # For each sub-grid find the available values to go in its empty cells
+    for sub_grid in sub_grids:
+        sub_grid_poss = all_poss.copy()
+        for coord in sub_grid:
+            r, c = coord
+            if grid[r][c] != 0:
+                sub_grid_poss.discard(grid[r][c])
+        sub_grid_available.append(sub_grid_poss)
+
+    # For each row find the available values to go in its empty cells
+    for row in range(num_rows):
+        row_poss = all_poss.copy()
+        for col in range(num_columns):
+            if grid[row][col] != 0:
+                row_poss.discard(grid[row][col])
+        row_available.append(row_poss)
+
+    # For each column find the available values to go in its empty cells
+    for col in range(num_columns):
+        col_poss = all_poss.copy()
+        for row in range(num_rows):
+            if grid[row][col] != 0:
+                col_poss.discard(grid[row][col])
+        col_available.append(col_poss)
+
+    return (sub_grid_available, row_available, col_available)
+
+
+def wavefront_solve(grid, n_rows, n_cols):
+    sub_grids = get_subgrids(grid, n_rows, n_cols)
+    available_data = initial_available(grid, n_rows, n_cols, sub_grids)
+    return recursive_wavefront(grid, n_rows, n_cols, sub_grids, available_data)
+
+
+def solve(grid, n_rows, n_cols):
+    """
+    Solve function for Sudoku.
+    Comment out one of the lines below to either use the wavefront or recursive solver
+    """
+
+
+#  the below function should be uncommented to demonstrate task 1
+#     return recursive_solve(grid, n_rows, n_cols)
+
+#  the below function should be uncommented to demonstrate task 3
+#     return wavefront_solve(grid, n_rows, n_cols)
+
+
 
 # def main_args(*args):
 #     #if args.explain:
