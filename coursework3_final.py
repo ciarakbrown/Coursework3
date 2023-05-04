@@ -1,12 +1,12 @@
 """
 Adding a header to the file.
 """
-import random
+#import random
 import copy
 import time
 import argparse
 
-from matplotlib import pyplot as plt
+#from matplotlib import pyplot as plt
 import math
 import numpy as np
 import csv
@@ -101,54 +101,42 @@ print("path", args.file)
 print("hint", args.hint)
 print("profile is", args.profile)
 
-
 def give_hint(grid, n_rows, n_cols):
-    solution = recursive_solve(grid, n_rows, n_cols)
-    hint_grid = [row[:] for row in grid]
-    hint_count = 0
+    #hint_grid = [row[:] for row in grid] #converting grid into row of list of lists
+    hint_count = 0 
+    solution = recursive_solve(grid, n_rows, n_cols) 
 
+    #looping through the unsolved and replacing empty squares from digits from the solved grid
+    grid = [[0, 2, 0, 0, 0, 0, 0, 1, 0],
+    [0, 0, 6, 0, 4, 0, 0, 0, 0],
+    [5, 8, 0, 0, 9, 0, 0, 0, 3],
+    [0, 0, 0, 0, 0, 3, 0, 0, 4],
+    [4, 1, 0, 0, 8, 0, 6, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 9, 5],
+    [2, 0, 0, 0, 1, 0, 0, 8, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 3, 1, 0, 0, 8, 0, 5, 7]]  
+    #this function only works when you copy and paste a grid in here
     for r in range(n_rows * n_cols):
         for c in range(n_rows * n_cols):
-            if hint_count == args.hint:
+            if hint_count == args.hint[0]:
                 break
-            if grid[r][c] == 0:
-                hint_grid[r][c] = solution[r][c]
+            elif grid[r][c] == 0:
+                grid[r][c] = solution[r][c] 
                 hint_count += 1
-            return hint_grid
-        else:
-            continue
-
-# def open_file(input_file):
-#     with open(input_file, 'r') as f:
-#         lines = f.readlines()
-#         grid = []
-#         for line in lines:
-#             nums = []
-#             for char in line.strip():
-#                 if char.isdigit():
-#                     nums.append(int(char))
-#             grid.append(nums)
-#         print(grid)
-    
-#     return grid
-
-# def output_file(output_file, solved_grid):
-#     with open(output_file, 'w') as f:
-#         for row in solved_grid:
-#             f.write(','.join(str(num) for num in row))
-#             f.write('\n')
+    return grid
     
     
 def file_input(filename):
-    with open(filename, newline='') as csvfile:
+    with open(filename) as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         grid = [[int(number) for number in row] for row in reader]
     return grid
 
-def file_output(filename, sudoku_board):
+def file_output(filename, solved_grid):
     with open(filename, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
-        for row in sudoku_board:
+        for row in solved_grid:
             writer.writerow(row)
 
 
@@ -193,73 +181,73 @@ def time_diff_grids(solver, grid, sub_rows, sub_cols):
     average_time = sum(times)/5
     return average_time
 
-from task3 import wavefront_solve
+#from task3 import wavefront_solve
 
-def profile(grid_list):
-    average_times_random = []
-    average_times_recursive = []
-    average_times_wavefront = []
+# def profile(grid_list):
+#     average_times_random = []
+#     average_times_recursive = []
+#     average_times_wavefront = []
 
-    #  loop through each grid
-    for grid, sub_rows, sub_cols in grid_list:
-        newgrid = copy.deepcopy(grid)  # make copy of original
+#     #  loop through each grid
+#     for grid, sub_rows, sub_cols in grid_list:
+#         newgrid = copy.deepcopy(grid)  # make copy of original
 
-        #  run the timer
-        # append to list containing average time to solve each grid
-        answers = time_diff_grids(random_solve, newgrid, sub_rows, sub_cols)
-        average_times_random.append(answers)
+#         #  run the timer
+#         # append to list containing average time to solve each grid
+#         answers = time_diff_grids(random_solve, newgrid, sub_rows, sub_cols)
+#         average_times_random.append(answers)
 
-        #  same for recursive
-        newgrid = copy.deepcopy(grid)
-        answers = time_diff_grids(recursive_solve, newgrid, sub_rows, sub_cols)
-        average_times_recursive.append(answers)
+#         #  same for recursive
+#         newgrid = copy.deepcopy(grid)
+#         answers = time_diff_grids(recursive_solve, newgrid, sub_rows, sub_cols)
+#         average_times_recursive.append(answers)
 
-        #  same for wavefront
-        newgrid = copy.deepcopy(grid)
-        answers = time_diff_grids(wavefront_solve, newgrid, sub_rows, sub_cols)
-        average_times_wavefront.append(answers)
+#         #  same for wavefront
+#         newgrid = copy.deepcopy(grid)
+#         answers = time_diff_grids(wavefront_solve, newgrid, sub_rows, sub_cols)
+#         average_times_wavefront.append(answers)
 
-    random_times_grid1 = average_times_random[0]
-    random_times_grid2 = average_times_random[1]
-    random_times_grid3 = average_times_random[2]
+#     random_times_grid1 = average_times_random[0]
+#     random_times_grid2 = average_times_random[1]
+#     random_times_grid3 = average_times_random[2]
 
-    recursive_times_grid1 = average_times_recursive[0]
-    recursive_times_grid2 = average_times_recursive[1]
-    recursive_times_grid3 = average_times_recursive[2]
+#     recursive_times_grid1 = average_times_recursive[0]
+#     recursive_times_grid2 = average_times_recursive[1]
+#     recursive_times_grid3 = average_times_recursive[2]
 
-    wavefront_times_grid1 = average_times_wavefront[0]
-    wavefront_times_grid2 = average_times_wavefront[1]
-    wavefront_times_grid3 = average_times_wavefront[2]
+#     wavefront_times_grid1 = average_times_wavefront[0]
+#     wavefront_times_grid2 = average_times_wavefront[1]
+#     wavefront_times_grid3 = average_times_wavefront[2]
 
-    solver_type = ("Random", "Recursive", "Wavefront")
-    difficulty = {
-        'Easy Grid': (random_times_grid1, recursive_times_grid1, wavefront_times_grid1),
-        'Medium Grid': (random_times_grid2, recursive_times_grid2, wavefront_times_grid2),
-        'Hard Grid': (random_times_grid3, recursive_times_grid3, wavefront_times_grid3),
-    }
+#     solver_type = ("Random", "Recursive", "Wavefront")
+#     difficulty = {
+#         'Easy Grid': (random_times_grid1, recursive_times_grid1, wavefront_times_grid1),
+#         'Medium Grid': (random_times_grid2, recursive_times_grid2, wavefront_times_grid2),
+#         'Hard Grid': (random_times_grid3, recursive_times_grid3, wavefront_times_grid3),
+#     }
 
-    x = np.arange(len(solver_type))  # the label locations
-    width = 0.25  # the width of the bars
-    multiplier = 0
+#     x = np.arange(len(solver_type))  # the label locations
+#     width = 0.25  # the width of the bars
+#     multiplier = 0
 
-    fig, ax = plt.subplots(layout='constrained')
+#     fig, ax = plt.subplots(layout='constrained')
 
-    for attribute, measurement in difficulty.items():
-        offset = width * multiplier
-        rects = ax.bar(x + offset, measurement, width, label=attribute)
-        ax.bar_label(rects, padding=3)
-        multiplier += 1
+#     for attribute, measurement in difficulty.items():
+#         offset = width * multiplier
+#         rects = ax.bar(x + offset, measurement, width, label=attribute)
+#         ax.bar_label(rects, padding=3)
+#         multiplier += 1
 
-    # Add some text for labels, title and custom x-axis tick labels, etc.
-    ax.set_ylabel('Time (s)')
-    ax.set_title('Method of solving')
-    ax.set_xticks(x + width, solver_type)
-    ax.legend(loc='upper left', ncols=3)
-    ax.set_ylim(0, 0.013)
+#     # Add some text for labels, title and custom x-axis tick labels, etc.
+#     ax.set_ylabel('Time (s)')
+#     ax.set_title('Method of solving')
+#     ax.set_xticks(x + width, solver_type)
+#     ax.legend(loc='upper left', ncols=3)
+#     ax.set_ylim(0, 0.013)
 
-    plt.show()
+#     plt.show()
 
-    print('if time = 0, solver is unsuccessful')
+#     print('if time = 0, solver is unsuccessful')
 
 
 
@@ -476,23 +464,18 @@ def solve(grid, n_rows, n_cols):
 #     #if args.explain and args.hint:
 #         #explain(give_hint(grid, n_rows, n_cols))
 
-#def main_args(*args):
+def main_args(*args):
     
-if args.file != None:
+    if args.file != None:
         grid = file_input(args.file[0])
-        n_rows = math.ceil(math.sqrt(len(grid)))
-        n_cols = math.floor(math.sqrt(len(grid[0])))
+        n_rows = int(math.ceil(math.sqrt(len(grid))))
+        n_cols = int(math.floor(math.sqrt(len(grid[0]))))
         solved_grid = recursive_solve(grid,n_rows, n_cols)
     
         file_output(args.file[1],solved_grid)
 
-if args.hint!= None :
-        args.hint = args.hint[0]
-        #grid = file_input(args.file[0])
-        n_rows = math.ceil(math.sqrt(len(grid)))
-        n_cols = math.floor(math.sqrt(len(grid[0])))
-        give_hint(grid, n_rows, n_cols)
-        print(give_hint(grid, n_rows, n_cols))
+    #if args.file
+        
 
 
 
@@ -526,5 +509,13 @@ def main():
     print("Test script complete, Total points: %d" % points)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__" and args.hint == None:
     main()
+elif __name__ == "__main__" and args.hint:
+    grid = grid9
+    n_rows = int(math.ceil(math.sqrt(len(grid))))
+    n_cols = int(math.floor(math.sqrt(len(grid[0]))))
+    hint_grid = give_hint(grid, n_rows, n_cols)
+    print(hint_grid)
+
+
