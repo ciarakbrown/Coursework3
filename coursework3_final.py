@@ -114,28 +114,29 @@ def give_hint(grid, n_rows, n_cols):
             if grid[r][c] == 0:
                 hint_grid[r][c] = solution[r][c]
                 hint_count += 1
+            return hint_grid
         else:
             continue
 
-def open_file(input_file):
-    with open(input_file, 'r') as f:
-        lines = f.readlines()
-        grid = []
-        for line in lines:
-            nums = []
-            for char in line.strip():
-                if char.isdigit():
-                    nums.append(int(char))
-            grid.append(nums)
-        print(grid)
+# def open_file(input_file):
+#     with open(input_file, 'r') as f:
+#         lines = f.readlines()
+#         grid = []
+#         for line in lines:
+#             nums = []
+#             for char in line.strip():
+#                 if char.isdigit():
+#                     nums.append(int(char))
+#             grid.append(nums)
+#         print(grid)
     
-    return grid
+#     return grid
 
-def output_file(output_file, solved_grid):
-    with open(output_file, 'w') as f:
-        for row in solved_grid:
-            f.write(','.join(str(num) for num in row))
-            f.write('\n')
+# def output_file(output_file, solved_grid):
+#     with open(output_file, 'w') as f:
+#         for row in solved_grid:
+#             f.write(','.join(str(num) for num in row))
+#             f.write('\n')
     
     
 def file_input(filename):
@@ -148,7 +149,7 @@ def file_output(filename, sudoku_board):
     with open(filename, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
         for row in sudoku_board:
-            writer.writerow(row)   
+            writer.writerow(row)
 
 
 # def explain(grid):
@@ -264,14 +265,6 @@ def profile(grid_list):
 # def main_args(*args):
 #     #if args.explain:
 #         #print(explain(grid1,2,2)[0] ,'\n' + explain(grid1,2,2)[1])
-#     if args.file:
-#         INPUT,OUTPUT = args.file[0], args.file[1]
-#         print(INPUT, OUTPUT)
-#         grid = open_file(INPUT)
-#         n_rows = math.ceil(math.sqrt(len(grid)))
-#         n_cols = math.floor(math.sqrt(len(grid[0])))
-#         solved_grid = recursive_solve(grid, n_rows, n_cols)
-#         output_file(OUTPUT, solved_grid)
 #     if args.hint:
 #         args.hint = int(args.hint)
 #         give_hint(grid, n_rows, n_cols)
@@ -289,6 +282,11 @@ def main_args(*args):
         solved_grid = recursive_solve(grid,n_rows, n_cols)
     
         file_output(args.file[1],solved_grid)
+
+    if args.hint!= None :
+        args.hint[0] = int(args.hint)
+        give_hint(grid, n_rows, n_cols)
+        print(give_hint(grid, n_rows, n_cols))
 
 def check_section(section, n):
     if len(set(section)) == len(section) and sum(section) == sum([i for i in range(n+1)]):
