@@ -1,16 +1,12 @@
-"""
-Adding a header to the file.
-"""
-#import random
+import random
 import copy
 import time
 import argparse
-
-#from matplotlib import pyplot as plt
+from matplotlib import pyplot as plt
 import math
 import numpy as np
 import csv
-#Grids 1-4 are 2x2
+
 grid1 = [
         [1, 0, 4, 2],
         [4, 2, 1, 3],
@@ -87,6 +83,8 @@ grids = [(grid1, 2, 2), (grid2, 2, 2), (grid3, 2, 2), (grid4, 2, 2), (grid5, 2, 
 DO NOT CHANGE CODE ABOVE THIS LINE
 ===================================
 '''
+grid_list = grids[2], grids[5], grids[8]
+
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-explain",help= "Explain solving",type=bool)
@@ -94,29 +92,31 @@ parser.add_argument("-file", help= "Path to the file input",nargs=2, type = str)
 parser.add_argument("-hint", help= "Return a hint", nargs=1, type = int)
 parser.add_argument("-profile", help = "Measures performance of your solver, in terms of time", type =bool  )
 
-args=parser.parse_args()
+args = parser.parse_args()
 
 print("arg explain is ", args.explain)
 print("path", args.file)
 print("hint", args.hint)
 print("profile is", args.profile)
 
-def give_hint(grid, n_rows, n_cols):
-    #hint_grid = [row[:] for row in grid] #converting grid into row of list of lists
-    hint_count = 0 
-    solution = recursive_solve(grid, n_rows, n_cols) 
 
-    #looping through the unsolved and replacing empty squares from digits from the solved grid
+def give_hint(grid, n_rows, n_cols):
+    hint_count = 0 
+    solution = recursive_solve(grid, n_rows, n_cols)
+
     grid = [[0, 2, 0, 0, 0, 0, 0, 1, 0],
-    [0, 0, 6, 0, 4, 0, 0, 0, 0],
-    [5, 8, 0, 0, 9, 0, 0, 0, 3],
-    [0, 0, 0, 0, 0, 3, 0, 0, 4],
-    [4, 1, 0, 0, 8, 0, 6, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 9, 5],
-    [2, 0, 0, 0, 1, 0, 0, 8, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 3, 1, 0, 0, 8, 0, 5, 7]]  
-    #this function only works when you copy and paste a grid in here
+            [0, 0, 6, 0, 4, 0, 0, 0, 0],
+            [5, 8, 0, 0, 9, 0, 0, 0, 3],
+            [0, 0, 0, 0, 0, 3, 0, 0, 4],
+            [4, 1, 0, 0, 8, 0, 6, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 9, 5],
+            [2, 0, 0, 0, 1, 0, 0, 8, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 3, 1, 0, 0, 8, 0, 5, 7]]
+
+    #  this function only works when you copy and paste a grid in here
+
+    #  looping through the unsolved and replacing empty squares from digits from the solved grid
     for r in range(n_rows * n_cols):
         for c in range(n_rows * n_cols):
             if hint_count == args.hint[0]:
@@ -125,34 +125,38 @@ def give_hint(grid, n_rows, n_cols):
                 grid[r][c] = solution[r][c] 
                 hint_count += 1
     return grid
+    # returns grid with hints
     
-    
+#this function reads a suduko board from a CVS file and returns a list of list so it can be used in functions
 def file_input(filename):
     with open(filename) as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
+        #converts each number in the row from a string to an integer
         grid = [[int(number) for number in row] for row in reader]
     return grid
 
-def file_output(filename, solved_grid):
-    with open(filename, 'w', newline='') as csvfile:
+#this function writes a solved grid to a CVS file
+def file_output(filename, sudoko):
+    solved_grid = sudoko
+    with open(filename, 'w') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
         for row in solved_grid:
             writer.writerow(row)
 
 
-# def explain(grid):
-#         # final_grid = ''
-#         # for i in range (len(grid)):
-#         #     final_grid += (grid[i])
+def explain(grid):
+        # final_grid = ''
+        # for i in range (len(grid)):
+        #     final_grid += (f'{grid[i]})\n')
 
-#         exp_string = ''
-#         for x in range (0,len(grid)):
-#             for y in range (0,len(grid[x])):
-#                 if grid[x][y] != 0:
-#                     exp_string +=(f'Put {grid[x][y]} in location ({x}, {y})\n')
 
-#         return_list = (exp_string)
-#         return return_list
+    exp_string = ''
+    for x in range (0,len(grid)):
+        for y in range (0,len(grid[x])):
+            if grid[x][y] != 0:
+                exp_string +=(f'Put {grid[x][y]} in location ({x}, {y})\n')
+
+    return exp_string
 
 
 
@@ -172,7 +176,7 @@ def time_diff_grids(solver, grid, sub_rows, sub_cols):
 
         #  if solver cannot solve grid, set time taken to a 'maximum' (50)
         if check_solution(solver_result, sub_rows, sub_cols) is False:
-            elapsed_time = 31
+            elapsed_time = 0
 
         #  add these 5 times to a list
         times.append(elapsed_time)
@@ -183,6 +187,9 @@ def time_diff_grids(solver, grid, sub_rows, sub_cols):
 
 
 def profile(grid_list):
+    """
+    function that takes the average time taken for each solver and plots it in a grouped bar graph
+    """
     average_times_random = []
     average_times_recursive = []
     average_times_wavefront = []
@@ -217,6 +224,8 @@ def profile(grid_list):
     wavefront_times_grid1 = average_times_wavefront[0]
     wavefront_times_grid2 = average_times_wavefront[1]
     wavefront_times_grid3 = average_times_wavefront[2]
+
+    #  plot the graph
 
     solver_type = ("Random", "Recursive", "Wavefront")
     difficulty = {
@@ -271,11 +280,11 @@ def get_squares(grid, n_rows, n_cols):
 
 
 def check_solution(grid, n_rows, n_cols):
-    '''
+    """
     This function is used to check whether a sudoku board has been correctly solved
     args: grid - representation of a suduko board as a nested list.
     returns: True (correct solution) or False (incorrect solution)
-    '''
+    """
 
     if grid is None:
         return False
@@ -303,6 +312,9 @@ def check_solution(grid, n_rows, n_cols):
 
 
 def get_subgrids(grid, sub_grid_rows, sub_grid_cols):
+    """
+    this functions returns a list of coordinates of the sub-grids of a grid
+    """
     subgrids = []
     num_rows = len(grid)
     num_cols = len(grid[0])
@@ -320,10 +332,8 @@ def get_subgrids(grid, sub_grid_rows, sub_grid_cols):
 
 def find_empty(grid, sub_grid_rows, sub_grid_cols):
     """
-    This function returns the index (i, j, k) to the first zero element in a sudoku grid
-    If no such element is found, it returns None
-    args: grids - a list of tuples, where each tuple contains a sudoku grid and the number of rows and columns in each sub-grid
-    return: A tuple (i,j,k) where i, j, and k are all integers, or None
+    This function returns r, c, a zero element in a sudoku grid that has the least amount of possible values.
+    It also returns the list of possible values to fit in that empty cell.
     """
 
     num_rows = len(grid)
@@ -550,6 +560,9 @@ def initial_available(grid, n_rows, n_cols, sub_grids):
 
 
 def wavefront_solve(grid, n_rows, n_cols):
+    """
+    the function runs the wavefront solver
+    """
     sub_grids = get_subgrids(grid, n_rows, n_cols)
     available_data = initial_available(grid, n_rows, n_cols, sub_grids)
     return recursive_wavefront(grid, n_rows, n_cols, sub_grids, available_data)
@@ -561,38 +574,26 @@ def solve(grid, n_rows, n_cols):
     Comment out one of the lines below to either use the wavefront or recursive solver
     """
 
-
 #  the below function should be uncommented to demonstrate task 1
-#     return recursive_solve(grid, n_rows, n_cols)
+    return recursive_solve(grid, n_rows, n_cols)
 
 #  the below function should be uncommented to demonstrate task 3
 #     return wavefront_solve(grid, n_rows, n_cols)
 
 
+if args.profile:
+    profile(grid_list)
 
-# def main_args(*args):
-#     #if args.explain:
-#         #print(explain(grid1,2,2)[0] ,'\n' + explain(grid1,2,2)[1])
-#     if args.hint:
-#         args.hint = int(args.hint)
-#         give_hint(grid, n_rows, n_cols)
-#     if args.profile:
-#         profile()
-#     #if args.explain and args.hint:
-#         #explain(give_hint(grid, n_rows, n_cols))
+#when the file flag is called this if statement solves and outputs the grid
+if args.file is not None:
+    grid = file_input(args.file[0])
+    #this calculates the number of rows and columns so the grid can be solved
+    n_rows = int(math.ceil(math.sqrt(len(grid))))
+    n_cols = int(math.floor(math.sqrt(len(grid[0]))))
+    solved_grid = recursive_solve(grid, n_rows, n_cols)
+    #calling the output function so the solved grid can be written up
+    file_output(args.file[1], solved_grid)
 
-def main_args(*args):
-    
-    if args.file != None:
-        grid = file_input(args.file[0])
-        n_rows = int(math.ceil(math.sqrt(len(grid))))
-        n_cols = int(math.floor(math.sqrt(len(grid[0]))))
-        solved_grid = recursive_solve(grid,n_rows, n_cols)
-    
-        file_output(args.file[1],solved_grid)
-
-    #if args.file
-        
 
 
 
@@ -601,6 +602,7 @@ def main_args(*args):
 DO NOT CHANGE CODE BELOW THIS LINE
 ===================================
 """
+
 
 def main():
 
@@ -619,6 +621,8 @@ def main():
         if check_solution(solution, n_rows, n_cols):
             print("grid %d correct" % (i+1))
             points = points + 10
+        if args.explain:
+            print(explain(solution))
         else:
             print("grid %d incorrect" % (i+1))
 
@@ -626,13 +630,27 @@ def main():
     print("Test script complete, Total points: %d" % points)
 
 
-if __name__ == "__main__" and args.hint == None:
+if __name__ == "__main__" and args.hint is None:
     main()
 elif __name__ == "__main__" and args.hint:
+    #  need to input grid wanting a hint for here e.g grid = [desired grid]
     grid = grid9
     n_rows = int(math.ceil(math.sqrt(len(grid))))
     n_cols = int(math.floor(math.sqrt(len(grid[0]))))
     hint_grid = give_hint(grid, n_rows, n_cols)
     print(hint_grid)
+
+if __name__ == "__main__":
+    if args.hint and args.explain:
+        #  need to input grid wanting a hint and explanation for here e.g grid = [desired grid]
+        grid = grid9
+        n_rows = int(math.ceil(math.sqrt(len(grid))))
+        n_cols = int(math.floor(math.sqrt(len(grid[0]))))
+        hint_grid = give_hint(grid, n_rows, n_cols)
+        print(hint_grid)
+        print(explain(hint_grid))
+
+
+
 
 
