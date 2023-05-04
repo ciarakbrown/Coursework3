@@ -262,31 +262,6 @@ def profile(grid_list):
     print('if time = 0, solver is unsuccessful')
 
 
-# def main_args(*args):
-#     #if args.explain:
-#         #print(explain(grid1,2,2)[0] ,'\n' + explain(grid1,2,2)[1])
-#     if args.hint:
-#         args.hint = int(args.hint)
-#         give_hint(grid, n_rows, n_cols)
-#     if args.profile:
-#         profile()
-#     #if args.explain and args.hint:
-#         #explain(give_hint(grid, n_rows, n_cols))
-
-def main_args(*args):
-    
-    if args.file != None:
-        grid = file_input(args.file[0])
-        n_rows = math.ceil(math.sqrt(len(grid)))
-        n_cols = math.floor(math.sqrt(len(grid[0])))
-        solved_grid = recursive_solve(grid,n_rows, n_cols)
-    
-        file_output(args.file[1],solved_grid)
-
-    if args.hint!= None :
-        args.hint[0] = int(args.hint)
-        give_hint(grid, n_rows, n_cols)
-        print(give_hint(grid, n_rows, n_cols))
 
 def check_section(section, n):
     if len(set(section)) == len(section) and sum(section) == sum([i for i in range(n+1)]):
@@ -489,6 +464,35 @@ def solve(grid, n_rows, n_cols):
     
     #return random_solve(grid, n_rows, n_cols)
     return recursive_solve(grid, n_rows, n_cols)
+
+# def main_args(*args):
+#     #if args.explain:
+#         #print(explain(grid1,2,2)[0] ,'\n' + explain(grid1,2,2)[1])
+#     if args.hint:
+#         args.hint = int(args.hint)
+#         give_hint(grid, n_rows, n_cols)
+#     if args.profile:
+#         profile()
+#     #if args.explain and args.hint:
+#         #explain(give_hint(grid, n_rows, n_cols))
+
+#def main_args(*args):
+    
+if args.file != None:
+        grid = file_input(args.file[0])
+        n_rows = math.ceil(math.sqrt(len(grid)))
+        n_cols = math.floor(math.sqrt(len(grid[0])))
+        solved_grid = recursive_solve(grid,n_rows, n_cols)
+    
+        file_output(args.file[1],solved_grid)
+
+if args.hint!= None :
+        args.hint = args.hint[0]
+        #grid = file_input(args.file[0])
+        n_rows = math.ceil(math.sqrt(len(grid)))
+        n_cols = math.floor(math.sqrt(len(grid[0])))
+        give_hint(grid, n_rows, n_cols)
+        print(give_hint(grid, n_rows, n_cols))
 
 
 
