@@ -181,73 +181,72 @@ def time_diff_grids(solver, grid, sub_rows, sub_cols):
     average_time = sum(times)/5
     return average_time
 
-#from task3 import wavefront_solve
 
-# def profile(grid_list):
-#     average_times_random = []
-#     average_times_recursive = []
-#     average_times_wavefront = []
+def profile(grid_list):
+    average_times_random = []
+    average_times_recursive = []
+    average_times_wavefront = []
 
-#     #  loop through each grid
-#     for grid, sub_rows, sub_cols in grid_list:
-#         newgrid = copy.deepcopy(grid)  # make copy of original
+    #  loop through each grid
+    for grid, sub_rows, sub_cols in grid_list:
+        newgrid = copy.deepcopy(grid)  # make copy of original
 
-#         #  run the timer
-#         # append to list containing average time to solve each grid
-#         answers = time_diff_grids(random_solve, newgrid, sub_rows, sub_cols)
-#         average_times_random.append(answers)
+        #  run the timer
+        # append to list containing average time to solve each grid
+        answers = time_diff_grids(random_solve, newgrid, sub_rows, sub_cols)
+        average_times_random.append(answers)
 
-#         #  same for recursive
-#         newgrid = copy.deepcopy(grid)
-#         answers = time_diff_grids(recursive_solve, newgrid, sub_rows, sub_cols)
-#         average_times_recursive.append(answers)
+        #  same for recursive
+        newgrid = copy.deepcopy(grid)
+        answers = time_diff_grids(recursive_solve, newgrid, sub_rows, sub_cols)
+        average_times_recursive.append(answers)
 
-#         #  same for wavefront
-#         newgrid = copy.deepcopy(grid)
-#         answers = time_diff_grids(wavefront_solve, newgrid, sub_rows, sub_cols)
-#         average_times_wavefront.append(answers)
+        #  same for wavefront
+        newgrid = copy.deepcopy(grid)
+        answers = time_diff_grids(wavefront_solve, newgrid, sub_rows, sub_cols)
+        average_times_wavefront.append(answers)
 
-#     random_times_grid1 = average_times_random[0]
-#     random_times_grid2 = average_times_random[1]
-#     random_times_grid3 = average_times_random[2]
+    random_times_grid1 = average_times_random[0]
+    random_times_grid2 = average_times_random[1]
+    random_times_grid3 = average_times_random[2]
 
-#     recursive_times_grid1 = average_times_recursive[0]
-#     recursive_times_grid2 = average_times_recursive[1]
-#     recursive_times_grid3 = average_times_recursive[2]
+    recursive_times_grid1 = average_times_recursive[0]
+    recursive_times_grid2 = average_times_recursive[1]
+    recursive_times_grid3 = average_times_recursive[2]
 
-#     wavefront_times_grid1 = average_times_wavefront[0]
-#     wavefront_times_grid2 = average_times_wavefront[1]
-#     wavefront_times_grid3 = average_times_wavefront[2]
+    wavefront_times_grid1 = average_times_wavefront[0]
+    wavefront_times_grid2 = average_times_wavefront[1]
+    wavefront_times_grid3 = average_times_wavefront[2]
 
-#     solver_type = ("Random", "Recursive", "Wavefront")
-#     difficulty = {
-#         'Easy Grid': (random_times_grid1, recursive_times_grid1, wavefront_times_grid1),
-#         'Medium Grid': (random_times_grid2, recursive_times_grid2, wavefront_times_grid2),
-#         'Hard Grid': (random_times_grid3, recursive_times_grid3, wavefront_times_grid3),
-#     }
+    solver_type = ("Random", "Recursive", "Wavefront")
+    difficulty = {
+        'Easy Grid': (random_times_grid1, recursive_times_grid1, wavefront_times_grid1),
+        'Medium Grid': (random_times_grid2, recursive_times_grid2, wavefront_times_grid2),
+        'Hard Grid': (random_times_grid3, recursive_times_grid3, wavefront_times_grid3),
+    }
 
-#     x = np.arange(len(solver_type))  # the label locations
-#     width = 0.25  # the width of the bars
-#     multiplier = 0
+    x = np.arange(len(solver_type))  # the label locations
+    width = 0.25  # the width of the bars
+    multiplier = 0
 
-#     fig, ax = plt.subplots(layout='constrained')
+    fig, ax = plt.subplots(layout='constrained')
 
-#     for attribute, measurement in difficulty.items():
-#         offset = width * multiplier
-#         rects = ax.bar(x + offset, measurement, width, label=attribute)
-#         ax.bar_label(rects, padding=3)
-#         multiplier += 1
+    for attribute, measurement in difficulty.items():
+        offset = width * multiplier
+        rects = ax.bar(x + offset, measurement, width, label=attribute)
+        ax.bar_label(rects, padding=3)
+        multiplier += 1
 
-#     # Add some text for labels, title and custom x-axis tick labels, etc.
-#     ax.set_ylabel('Time (s)')
-#     ax.set_title('Method of solving')
-#     ax.set_xticks(x + width, solver_type)
-#     ax.legend(loc='upper left', ncols=3)
-#     ax.set_ylim(0, 0.013)
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax.set_ylabel('Time (s)')
+    ax.set_title('Method of solving')
+    ax.set_xticks(x + width, solver_type)
+    ax.legend(loc='upper left', ncols=3)
+    ax.set_ylim(0, 0.013)
 
-#     plt.show()
+    plt.show()
 
-#     print('if time = 0, solver is unsuccessful')
+    print('if time = 0, solver is unsuccessful')
 
 
 def check_section(section, n):
